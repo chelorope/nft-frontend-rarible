@@ -1,9 +1,16 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import useCoinbase from "../lib/useCoinbase";
+import useRarible from "../lib/useRarible";
+import useWallet from "../lib/useWallet";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
+  const coinbaseProvider = useCoinbase();
+  const [onConnect, account] = useWallet(coinbaseProvider);
+  console.log("ACCOUNT:", account);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,15 +20,17 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
+        <h4 className={styles.title}>
           Rarible SDK usage with Metamask and Coinbase wallets
-        </h1>
-        <span className={styles.logo}>
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </span>
+        </h4>
+        <div style={{ marginTop: "30px" }}>
+          {account ? (
+            account
+          ) : (
+            <button onClick={onConnect}>Connect Coinbase</button>
+          )}
+        </div>
       </main>
-
-      <footer className={styles.footer}></footer>
     </div>
   );
 };
